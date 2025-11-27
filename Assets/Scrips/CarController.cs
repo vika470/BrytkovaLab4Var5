@@ -8,18 +8,25 @@ public class CarController : MonoBehaviour
     public float speedCar = 5.0f;
     private bool isClicked;
     public float speedRotation = 300f;
-    
+    private AudioSource _audio;
+    public AudioClip _audioSart, _audioTurn;
+
+
     [NonSerialized]
     public Vector3 finalPosition;
 
     private void Awake()
     {
         _rb = GetComponent<Rigidbody>();
+        _audio = GetComponent<AudioSource>();
     }
 
     private void OnMouseDown()
     {
         isClicked = true;
+        _audio.Stop();
+        _audio.clip = _audioSart;
+        _audio.Play();
     }
 
     private void Update()
@@ -37,6 +44,16 @@ finalPosition, speedCar * 3 * Time.deltaTime);
         if (transform.position == finalPosition)
         {
             Destroy(gameObject);
+        }
+    }
+
+    void OnTriggerStay(Collider other)
+    {
+        if (other.CompareTag("RoadTrigger"))
+        {
+            _audio.Stop();
+            _audio.clip = _audioTurn;
+            _audio.Play();
         }
     }
 
